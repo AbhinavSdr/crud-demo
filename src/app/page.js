@@ -48,7 +48,9 @@ export default async function Home() {
                 <li className="text-center w-[50%]">{element.note}</li>
                 <li className="text-center w-[30%]">{element.date}</li>
                 <li className="text-center w-[20%]">
-                  <button className="bg-cyan-600 font-bold text-white p-2">EDIT</button>
+                  <Link href={"/edit/"+element.id}>
+                    <button className="bg-cyan-600 font-bold text-white p-2">EDIT</button>
+                  </Link>
                   <button className="bg-cyan-600 font-bold text-white p-2">DELETE</button>
                 </li>
               </ul>
