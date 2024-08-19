@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 
-export default function Home() {
+export default async function Home() {
   dbConnect()
 
   //Create
@@ -16,7 +16,15 @@ export default function Home() {
       const newNote = await pool.query('INSERT INTO notes (note, date) VALUES ($1, $2) RETURNING *', [note,date])
       console.log(newNote.rows[0])
     }
+    catch(err){
+      console.log(err)
+    }
+    redirect('/')
   }
+
+  //READ
+  const data = await pool.query("SELECT * FROM notes")
+  const result = data.rows
 
   return (
     <main className="m-10">
@@ -24,14 +32,32 @@ export default function Home() {
         <h1 className="text-center m-5">
           Add Note
         </h1>
-        <form action="" className="space-y-5">
-          <input type="text" name='note' id='note' placeholder="Add Notes" className="shadow-lg rounded-md shadow-black h-10 p-3 w-[100%]"/>
-          <input type="date" name='date' id='date' placeholder="Add Notes" className="shadow-lg rounded-md shadow-black h-10 p-3 w-[100%]"/>
+        <form action={createNote} className="space-y-5">
+          <input type="text" name='note' id='note' placeholder="Add Notes" className="shadow-lg rounded-md text-black shadow-black h-10 p-3 w-[100%]"/>
+          <input type="date" name='date' id='date' placeholder="Add Date" className="shadow-lg rounded-md text-black shadow-black h-10 p-3 w-[100%]"/>
           <button type="submit" className="bg-orange-500 font-bold text-white hover:bg-red-600 p-3 rounded-md">
             SUBMIT
           </button>
         </form>
       </div>
+      {
+        result.map((element)=>{
+          return(
+            <>
+              <ul className="flex my-2">
+                <li className="text-center w-[50%]">{element.note}</li>
+                <li className="text-center w-[30%]">{element.date}</li>
+                <li className="text-center w-[20%]">
+                  <button className="bg-cyan-600 font-bold text-white p-2">EDIT</button>
+                  <button className="bg-cyan-600 font-bold text-white p-2">DELETE</button>
+                </li>
+              </ul>
+            </>
+          )
+        })
+      }
+
+
     </main>
   )
 }

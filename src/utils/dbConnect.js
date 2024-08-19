@@ -1,6 +1,6 @@
-import { pool } from "pg";
+import { Pool } from "pg";
 
-export const pool = new pool({
+export const pool = new Pool({
     user: process.env.USER_NAME,
     host: process.env.HOST_NAME,
     database: process.env.DB_NAME,
